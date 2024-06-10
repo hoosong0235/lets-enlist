@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/find_controller.dart';
 import 'package:flutter_app/models/enlist_model.dart';
+import 'package:flutter_app/utilities/color.dart';
 import 'package:flutter_app/utilities/value.dart';
 import 'package:flutter_app/views/details_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,12 +17,13 @@ class buildAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: PADDING),
       child: AppBar(
+        backgroundColor: WHITE,
         leadingWidth: 128,
         leading: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
-              FindController.clearKeyword();
+              FindController.clear();
               Navigator.popUntil(
                 context,
                 (Route<dynamic> route) => route.isFirst,

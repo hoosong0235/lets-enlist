@@ -239,9 +239,24 @@ class _MainViewState extends State<MainView> {
               transitionDuration: Duration.zero,
               reverseTransitionDuration: Duration.zero,
             ),
+          ).then(
+            (_) {
+              setState(() {});
+            },
           );
         },
         child: const Text('검색'),
+      );
+    }
+
+    Widget _buildResetButton() {
+      return OutlinedButton(
+        onPressed: () {
+          setState(() {
+            FindController.clear();
+          });
+        },
+        child: const Text('초기화'),
       );
     }
 
@@ -276,6 +291,10 @@ class _MainViewState extends State<MainView> {
               transitionDuration: Duration.zero,
               reverseTransitionDuration: Duration.zero,
             ),
+          ).then(
+            (_) {
+              setState(() {});
+            },
           );
         },
       );
@@ -314,6 +333,8 @@ class _MainViewState extends State<MainView> {
                   _buildEnlistDateTimePicker(),
                   buildSizedBox(32),
                   _buildDischargeDateTimePicker(),
+                  buildSizedBox(32),
+                  _buildResetButton(),
                 ],
               ),
             ],
@@ -359,6 +380,10 @@ class _MainViewState extends State<MainView> {
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),
+            ).then(
+              (_) {
+                setState(() {});
+              },
             ),
             child: Stack(
               children: [

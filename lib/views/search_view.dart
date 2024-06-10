@@ -187,6 +187,17 @@ class _SearchViewState extends State<SearchView> {
       );
     }
 
+    Widget _buildResetButton() {
+      return OutlinedButton(
+        onPressed: () {
+          setState(() {
+            FindController.clear();
+          });
+        },
+        child: const Text('초기화'),
+      );
+    }
+
     SearchBar _buildSearchBar() {
       return SearchBar(
         controller: FindController.searchViewKeywordController,
@@ -246,6 +257,8 @@ class _SearchViewState extends State<SearchView> {
                   _buildEnlistDateTimePicker(),
                   buildSizedBox(32),
                   _buildDischargeDateTimePicker(),
+                  buildSizedBox(32),
+                  _buildResetButton(),
                 ],
               ),
             ],

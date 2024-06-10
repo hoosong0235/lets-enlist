@@ -44,4 +44,14 @@ class FindController {
     searchViewKeywordController.clear();
     keyword = '';
   }
+
+  static void clear() {
+    mainViewKeywordController.clear();
+    searchViewKeywordController.clear();
+    keyword = '';
+    branch = Branch.ALL;
+    interviewType = InterviewType.ALL;
+    enlistDateTimeRange = initialEnlistDateTimeRange;
+    dischargeDateTimeRange = initialDischargeDateTimeRange;
+  }
 }
