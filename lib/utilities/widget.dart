@@ -46,7 +46,7 @@ class _buildAppBarState extends State<buildAppBar> {
               );
             },
             child: SvgPicture.asset(
-              'assets/LetsEnlist.svg',
+              'assets/LetsEnlistHorizontal.svg',
             ),
           ),
         ),
