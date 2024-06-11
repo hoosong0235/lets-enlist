@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/enlist_model.dart';
-import 'package:flutter_app/utilities/color.dart';
-import 'package:flutter_app/utilities/value.dart';
-import 'package:flutter_app/utilities/widget.dart';
+import 'package:lets_enlist/controllers/authentication_controller.dart';
+import 'package:lets_enlist/controllers/firestore_database_controller.dart';
+import 'package:lets_enlist/models/enlist_model.dart';
+import 'package:lets_enlist/utilities/color.dart';
+import 'package:lets_enlist/utilities/value.dart';
+import 'package:lets_enlist/utilities/widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 // ignore: must_be_immutable
-class DetailsView extends StatelessWidget {
+class DetailsView extends StatefulWidget {
   EnlistModel enlistModel;
 
   DetailsView({super.key, required this.enlistModel});
 
+  @override
+  State<DetailsView> createState() => _DetailsViewState();
+}
+
+class _DetailsViewState extends State<DetailsView> {
   @override
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
@@ -20,29 +27,80 @@ class DetailsView extends StatelessWidget {
       return Stack(
         children: [
           SvgPicture.asset(
-            'assets/${enlistModel.branch.nameEng}GradientLarge.svg',
+            'assets/${widget.enlistModel.branch.nameEng}GradientLarge.svg',
             height: 320,
             fit: BoxFit.cover,
           ),
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.only(left: PADDING),
+              padding: const EdgeInsets.symmetric(horizontal: PADDING),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    enlistModel.descriptionShort,
-                    style: tt.headlineLarge?.copyWith(
-                      color: WHITE,
-                    ),
-                  ),
-                  Text(
-                    enlistModel.classification ?? '-',
-                    style: tt.displayLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: WHITE,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.enlistModel.descriptionShort,
+                            style: tt.headlineLarge?.copyWith(
+                              color: WHITE,
+                            ),
+                          ),
+                          Text(
+                            widget.enlistModel.classification ?? '-',
+                            style: tt.displayLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: WHITE,
+                            ),
+                          ),
+                        ],
+                      ),
+                      FirestoreDatabaseController.isFavoriteEnlist(
+                        widget.enlistModel,
+                      )
+                          ? IconButton(
+                              onPressed: () async {
+                                if (AuthenticationController
+                                    .hasUserCredential) {
+                                  await FirestoreDatabaseController
+                                      .removeFavoriteEnlists(
+                                    widget.enlistModel,
+                                  );
+                                } else {
+                                  await AuthenticationController.signIn();
+                                }
+
+                                setState(() {});
+                              },
+                              icon: const Icon(
+                                Icons.star,
+                                color: WHITE,
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: () async {
+                                if (AuthenticationController
+                                    .hasUserCredential) {
+                                  await FirestoreDatabaseController
+                                      .appendFavoriteEnlists(
+                                    widget.enlistModel,
+                                  );
+                                } else {
+                                  await AuthenticationController.signIn();
+                                }
+
+                                setState(() {});
+                              },
+                              icon: const Icon(
+                                Icons.star_border,
+                                color: WHITE,
+                              ),
+                            ),
+                    ],
                   ),
                 ],
               ),
@@ -73,7 +131,7 @@ class DetailsView extends StatelessWidget {
                 ),
                 buildSizedBox(16),
                 Text(
-                  enlistModel.description ?? '-',
+                  widget.enlistModel.description ?? '-',
                   style: tt.bodyLarge,
                 ),
                 buildSizedBox(64),
@@ -85,7 +143,7 @@ class DetailsView extends StatelessWidget {
                 ),
                 buildSizedBox(16),
                 Text(
-                  enlistModel.qualification ?? '-',
+                  widget.enlistModel.qualification ?? '-',
                   style: tt.bodyLarge,
                 ),
                 buildSizedBox(64),
@@ -97,7 +155,7 @@ class DetailsView extends StatelessWidget {
                 ),
                 buildSizedBox(16),
                 Text(
-                  enlistModel.documentsNeeded ?? '-',
+                  widget.enlistModel.documentsNeeded ?? '-',
                   style: tt.bodyLarge,
                 ),
                 buildSizedBox(64),
@@ -108,7 +166,7 @@ class DetailsView extends StatelessWidget {
                   ),
                 ),
                 buildSizedBox(16),
-                enlistModel.hasInterview
+                widget.enlistModel.hasInterview
                     ? Column(
                         children: [
                           Row(
@@ -126,7 +184,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      '${enlistModel.recruitmentNumber ?? 0}명',
+                                      '${widget.enlistModel.recruitmentNumber ?? 0}명',
                                       style: tt.bodyLarge,
                                     ),
                                   ],
@@ -146,7 +204,8 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      enlistModel.interviewType?.name ?? '없음',
+                                      widget.enlistModel.interviewType?.name ??
+                                          '없음',
                                       style: tt.bodyLarge,
                                     ),
                                   ],
@@ -169,7 +228,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      '${enlistModel.applicationStart.toString().substring(0, 16)} ~ ${enlistModel.applicationEnd.toString().substring(0, 16)}',
+                                      '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
                                       style: tt.bodyLarge,
                                     ),
                                   ],
@@ -189,7 +248,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      enlistModel.firstResultsDateTime
+                                      widget.enlistModel.firstResultsDateTime
                                               ?.toString()
                                               .substring(0, 16) ??
                                           '-',
@@ -215,9 +274,11 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      (enlistModel.interviewStart != null &&
-                                              enlistModel.interviewEnd != null)
-                                          ? '${enlistModel.interviewStart.toString().substring(0, 16)} ~ ${enlistModel.interviewEnd.toString().substring(0, 16)}'
+                                      (widget.enlistModel.interviewStart !=
+                                                  null &&
+                                              widget.enlistModel.interviewEnd !=
+                                                  null)
+                                          ? '${widget.enlistModel.interviewStart.toString().substring(0, 16)} ~ ${widget.enlistModel.interviewEnd.toString().substring(0, 16)}'
                                           : '-',
                                       style: tt.bodyLarge,
                                     ),
@@ -238,7 +299,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      enlistModel.finalResultsDateTime
+                                      widget.enlistModel.finalResultsDateTime
                                               ?.toString()
                                               .substring(0, 16) ??
                                           '-',
@@ -268,7 +329,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      '${enlistModel.recruitmentNumber ?? 0}명',
+                                      '${widget.enlistModel.recruitmentNumber ?? 0}명',
                                       style: tt.bodyLarge,
                                     ),
                                   ],
@@ -288,7 +349,8 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      enlistModel.interviewType?.name ?? '없음',
+                                      widget.enlistModel.interviewType?.name ??
+                                          '없음',
                                       style: tt.bodyLarge,
                                     ),
                                   ],
@@ -311,7 +373,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      '${enlistModel.applicationStart.toString().substring(0, 16)} ~ ${enlistModel.applicationEnd.toString().substring(0, 16)}',
+                                      '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
                                       style: tt.bodyLarge,
                                     ),
                                   ],
@@ -331,7 +393,7 @@ class DetailsView extends StatelessWidget {
                                     ),
                                     Text(
                                       // todo: modify here
-                                      enlistModel.finalResultsDateTime
+                                      widget.enlistModel.finalResultsDateTime
                                               ?.toString()
                                               .substring(0, 16) ??
                                           '-',
@@ -368,7 +430,7 @@ class DetailsView extends StatelessWidget {
                               ),
                               Text(
                                 // todo: modify here
-                                enlistModel.enlistDateTime
+                                widget.enlistModel.enlistDateTime
                                     .toString()
                                     .substring(0, 16),
                                 style: tt.bodyLarge,
@@ -389,7 +451,7 @@ class DetailsView extends StatelessWidget {
                               ),
                               Text(
                                 // todo: modify here
-                                enlistModel.dischargeDateTime
+                                widget.enlistModel.dischargeDateTime
                                     .toString()
                                     .substring(0, 16),
                                 style: tt.bodyLarge,
@@ -413,7 +475,7 @@ class DetailsView extends StatelessWidget {
                               ),
                               Text(
                                 // todo: modify here
-                                enlistModel.recruitTrainingCenter ?? '-',
+                                widget.enlistModel.recruitTrainingCenter ?? '-',
                                 style: tt.bodyLarge,
                               ),
                             ],
@@ -435,14 +497,14 @@ class DetailsView extends StatelessWidget {
                   ),
                 ),
                 buildSizedBox(16),
-                enlistModel.administrationAnnouncementLink != null
+                widget.enlistModel.administrationAnnouncementLink != null
                     ? InkWell(
                         child: Text(
-                          enlistModel.administrationAnnouncementLink!,
+                          widget.enlistModel.administrationAnnouncementLink!,
                           style: tt.bodyLarge,
                         ),
                         onTap: () async => await launchUrlString(
-                          enlistModel.administrationAnnouncementLink!,
+                          widget.enlistModel.administrationAnnouncementLink!,
                         ),
                       )
                     : Text(

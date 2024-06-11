@@ -1,10 +1,11 @@
 // 'EnlistModel' is the parameter for details page,
 // when user clicks given card, corresponding 'EnlistModel' will be used for building details page
-import 'package:flutter_app/utilities/value.dart';
+import 'package:lets_enlist/utilities/value.dart';
 
 class EnlistModel {
   // todo: define required fields for the functionality above
   EnlistModel({
+    required this.index,
     required this.branch,
     required this.serialNumber,
     required this.recruitTrainingCenter,
@@ -27,6 +28,7 @@ class EnlistModel {
     required this.documentsNeeded,
   });
 
+  int index;
   Branch branch;
   String? serialNumber;
   String? recruitTrainingCenter;

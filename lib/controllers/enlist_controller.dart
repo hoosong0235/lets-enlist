@@ -1,7 +1,7 @@
-import 'package:flutter_app/controllers/find_controller.dart';
-import 'package:flutter_app/models/enlist_model.dart';
-import 'package:flutter_app/utilities/database.dart';
-import 'package:flutter_app/utilities/value.dart';
+import 'package:lets_enlist/controllers/find_controller.dart';
+import 'package:lets_enlist/models/enlist_model.dart';
+import 'package:lets_enlist/utilities/database.dart';
+import 'package:lets_enlist/utilities/value.dart';
 
 Branch _getBranch(String branch) {
   if (branch == '육군') {
@@ -57,12 +57,13 @@ class EnlistController {
       ..sort((a, b) => a.applicationEnd.difference(b.applicationEnd).inMinutes);
   }
 
-  // will be executed once before launch
   static void fetchRawEnlists() {
-    // todo: read csv and fetch all enlist models in the list '_rawEnlists'
+    int cnt = 0;
+
     _rawEnlists.addAll(
       database.map(
         (Map<String, dynamic> enlistMap) => EnlistModel(
+            index: cnt++,
             branch: _getBranch(enlistMap['branch']),
             serialNumber: enlistMap['serialNumber'],
             recruitTrainingCenter: enlistMap['recruitTrainingCenter'],
@@ -97,10 +98,7 @@ class EnlistController {
     );
   }
 
-  // will be executed every single time user clicks search button
   static void findFoundEnlists() {
-    // todo: filter '_rawEnlists' and update '_enlists' using three static variables below.
-    // in flutter, static variables are unique, and can be shared among the whole application
     _foundEnlists = _rawEnlists
         .where((EnlistModel enlistModel) =>
             (FindController.keyword.isEmpty ||

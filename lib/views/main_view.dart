@@ -1,14 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/controllers/enlist_controller.dart';
-import 'package:flutter_app/controllers/find_controller.dart';
-import 'package:flutter_app/models/enlist_model.dart';
-import 'package:flutter_app/utilities/color.dart';
-import 'package:flutter_app/utilities/value.dart';
-import 'package:flutter_app/utilities/widget.dart';
-import 'package:flutter_app/views/details_view.dart';
-import 'package:flutter_app/views/search_view.dart';
+import 'package:lets_enlist/controllers/enlist_controller.dart';
+import 'package:lets_enlist/controllers/find_controller.dart';
+import 'package:lets_enlist/models/enlist_model.dart';
+import 'package:lets_enlist/utilities/color.dart';
+import 'package:lets_enlist/utilities/value.dart';
+import 'package:lets_enlist/utilities/widget.dart';
+import 'package:lets_enlist/views/details_view.dart';
+import 'package:lets_enlist/views/search_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MainView extends StatefulWidget {
@@ -449,8 +448,7 @@ class _MainViewState extends State<MainView> {
         children: List.generate(
           EnlistController.latestEnlists.length,
           (int i) => buildEnlist(
-            EnlistController.latestEnlists[i],
-            context,
+            enlistModel: EnlistController.latestEnlists[i],
           ),
         ),
       );

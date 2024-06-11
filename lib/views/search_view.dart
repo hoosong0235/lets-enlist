@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/controllers/enlist_controller.dart';
-import 'package:flutter_app/controllers/find_controller.dart';
-import 'package:flutter_app/utilities/color.dart';
-import 'package:flutter_app/utilities/value.dart';
-import 'package:flutter_app/utilities/widget.dart';
+import 'package:lets_enlist/controllers/enlist_controller.dart';
+import 'package:lets_enlist/controllers/find_controller.dart';
+import 'package:lets_enlist/utilities/color.dart';
+import 'package:lets_enlist/utilities/value.dart';
+import 'package:lets_enlist/utilities/widget.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -273,8 +273,7 @@ class _SearchViewState extends State<SearchView> {
         children: List.generate(
           EnlistController.foundEnlists.length,
           (int i) => buildEnlist(
-            EnlistController.foundEnlists[i],
-            context,
+            enlistModel: EnlistController.foundEnlists[i],
           ),
         ),
       );

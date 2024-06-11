@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/utilities/value.dart';
+import 'package:lets_enlist/utilities/value.dart';
 
 // not named 'SearchController' since it already exists in flutter
 class FindController {

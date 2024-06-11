@@ -1,8 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/enlist_model.dart';
-import 'package:flutter_app/utilities/color.dart';
+import 'package:lets_enlist/models/enlist_model.dart';
+import 'package:lets_enlist/utilities/color.dart';
 
 const double PADDING = 256;
 

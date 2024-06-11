@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/controllers/enlist_controller.dart';
-import 'package:flutter_app/firebase_options.dart';
-import 'package:flutter_app/views/main_view.dart';
+import 'package:lets_enlist/controllers/enlist_controller.dart';
+import 'package:lets_enlist/firebase_options.dart';
+import 'package:lets_enlist/views/main_view.dart';
 
 void main() async {
   await Firebase.initializeApp(
