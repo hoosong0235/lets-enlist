@@ -76,3 +76,46 @@ enum EnlistType {
   final bool Function(EnlistModel) function;
   final String name;
 }
+
+enum ChatType {
+  User(
+    MainAxisAlignment.end,
+    EdgeInsets.only(
+      top: 16,
+      bottom: 16,
+      left: 64,
+      right: 32,
+    ),
+    BorderRadius.only(
+      topLeft: Radius.circular(16),
+      topRight: Radius.zero,
+      bottomLeft: Radius.circular(16),
+      bottomRight: Radius.circular(16),
+    ),
+  ),
+  Gemeni(
+    MainAxisAlignment.start,
+    EdgeInsets.only(
+      top: 16,
+      bottom: 16,
+      left: 32,
+      right: 64,
+    ),
+    BorderRadius.only(
+      topLeft: Radius.zero,
+      topRight: Radius.circular(16),
+      bottomLeft: Radius.circular(16),
+      bottomRight: Radius.circular(16),
+    ),
+  );
+
+  const ChatType(
+    this.mainAxisAlignment,
+    this.edgeInsets,
+    this.borderRadius,
+  );
+
+  final MainAxisAlignment mainAxisAlignment;
+  final EdgeInsets edgeInsets;
+  final BorderRadius borderRadius;
+}

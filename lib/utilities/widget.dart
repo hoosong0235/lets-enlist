@@ -2,7 +2,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:lets_enlist/controllers/authentication_controller.dart';
+import 'package:lets_enlist/controllers/chat_controller.dart';
 import 'package:lets_enlist/controllers/find_controller.dart';
 import 'package:lets_enlist/controllers/firestore_database_controller.dart';
 import 'package:lets_enlist/models/enlist_model.dart';
@@ -334,5 +336,185 @@ class _buildEnlistState extends State<buildEnlist> {
         ),
       ),
     );
+  }
+}
+
+class buildFloatingActionButton extends StatefulWidget {
+  const buildFloatingActionButton({super.key});
+
+  @override
+  State<buildFloatingActionButton> createState() =>
+      _buildFloatingActionButtonState();
+}
+
+class _buildFloatingActionButtonState extends State<buildFloatingActionButton> {
+  @override
+  Widget build(BuildContext context) {
+    return ChatController.isChatFloating
+        ? Container(
+            width: 384,
+            height: 512,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              color: Colors.white,
+              boxShadow: kElevationToShadow[3],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: 384,
+                  height: 56,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
+                    ),
+                    gradient: LinearGradient(
+                      colors: [
+                        GeminiFirst,
+                        GeminiSecond,
+                        GeminiThird,
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 32,
+                      right: 16,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SvgPicture.asset('assets/LetsEnlistAIHorizontal.svg'),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              ChatController.isChatFloating = false;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.minimize,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomStart,
+                    children: [
+                      ListView(
+                        controller: ChatController.scrollController,
+                        children: [
+                          buildSizedBox(16),
+                          ...List.generate(
+                            ChatController.chats.length,
+                            (int i) {
+                              return Row(
+                                mainAxisAlignment: ChatController
+                                    .chats[i].chatType.mainAxisAlignment,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      margin: ChatController
+                                          .chats[i].chatType.edgeInsets,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: ChatController
+                                            .chats[i].chatType.borderRadius,
+                                        boxShadow: kElevationToShadow[2],
+                                      ),
+                                      child: MarkdownBody(
+                                        data: ChatController.chats[i].text,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          buildSizedBox(16 + 56 + 16),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: SearchBar(
+                          controller: ChatController.textEditingController,
+                          hintText: '이때입대 AI에게 물어보세요!',
+                          trailing: [
+                            ChatController.isChatReceiving
+                                ? CircularProgressIndicator(
+                                    color: ([
+                                      GeminiFirst,
+                                      GeminiSecond,
+                                      GeminiThird
+                                    ]..shuffle())
+                                        .first,
+                                  )
+                                : IconButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        ChatController.sendChat();
+                                      });
+                                      ChatController.scrollDown();
+
+                                      await ChatController.receiveChat();
+                                      setState(() {});
+                                      ChatController.scrollDown();
+                                    },
+                                    icon: const Icon(
+                                      Icons.keyboard_return,
+                                    ),
+                                  )
+                          ],
+                          onChanged: (text) {
+                            ChatController.text = text;
+                          },
+                          onSubmitted: (_) async {
+                            setState(() {
+                              ChatController.sendChat();
+                            });
+                            ChatController.scrollDown();
+
+                            await ChatController.receiveChat();
+                            setState(() {});
+                            ChatController.scrollDown();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: kElevationToShadow[3],
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  GeminiFirst,
+                  GeminiSecond,
+                  GeminiThird,
+                ],
+              ),
+            ),
+            child: FloatingActionButton.large(
+              onPressed: () {
+                setState(() {
+                  ChatController.isChatFloating = true;
+                });
+              },
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: SvgPicture.asset('assets/AI.svg'),
+            ),
+          );
   }
 }

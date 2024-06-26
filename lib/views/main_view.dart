@@ -505,6 +505,7 @@ class _MainViewState extends State<MainView> {
 
     return Scaffold(
       appBar: const buildAppBar(),
+      floatingActionButton: const buildFloatingActionButton(),
       body: ListView(
         children: [
           _buildStack(),

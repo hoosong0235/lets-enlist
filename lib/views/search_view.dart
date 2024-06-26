@@ -351,6 +351,7 @@ class _SearchViewState extends State<SearchView> {
 
     return Scaffold(
       appBar: const buildAppBar(),
+      floatingActionButton: const buildFloatingActionButton(),
       body: ListView(
         children: [
           Padding(

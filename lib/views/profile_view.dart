@@ -31,6 +31,7 @@ class _ProfileViewState extends State<ProfileView> {
 
     return Scaffold(
       appBar: const buildAppBar(),
+      floatingActionButton: const buildFloatingActionButton(),
       body: ListView(
         children: [
           Padding(

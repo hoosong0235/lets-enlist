@@ -78,6 +78,7 @@
 * [![Figma][Figma.js]][Figma-url]
 * [![Flutter][Flutter.js]][Flutter-url]
 * [![Firebase][Firebase.js]][Firebase-url]
+* [![GoogleGemini][GoogleGemini.js]][GoogleGemini-url]
 
 <p align="right">(<a href="#readme-top">처음으로</a>)</p>
 
@@ -159,3 +160,5 @@ Project Link: [https://github.com/hoosong0235/lets-enlist](https://github.com/ho
 [Flutter-url]: https://flutter.dev/
 [Firebase.js]: https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34
 [Firebase-url]: https://firebase.google.com/
+[GoogleGemini.js]: https://img.shields.io/badge/Google%20Gemini-886FBF?logo=googlegemini&logoColor=fff
+[GoogleGemini-url]: https://gemini.google.com/
