@@ -456,14 +456,10 @@ class _buildFloatingActionButtonState extends State<buildFloatingActionButton> {
                                   )
                                 : IconButton(
                                     onPressed: () async {
-                                      setState(() {
-                                        ChatController.sendChat();
-                                      });
-                                      ChatController.scrollDown();
-
+                                      ChatController.sendChat();
+                                      setState(() {});
                                       await ChatController.receiveChat();
                                       setState(() {});
-                                      ChatController.scrollDown();
                                     },
                                     icon: const Icon(
                                       Icons.keyboard_return,
@@ -474,14 +470,10 @@ class _buildFloatingActionButtonState extends State<buildFloatingActionButton> {
                             ChatController.text = text;
                           },
                           onSubmitted: (_) async {
-                            setState(() {
-                              ChatController.sendChat();
-                            });
-                            ChatController.scrollDown();
-
+                            ChatController.sendChat();
+                            setState(() {});
                             await ChatController.receiveChat();
                             setState(() {});
-                            ChatController.scrollDown();
                           },
                         ),
                       ),

@@ -313,7 +313,7 @@ class _SearchViewState extends State<SearchView> {
                         .toList(),
                     onSelected: (EnlistType? value) => setState(
                       () {
-                        EnlistController.enlistType = value ?? EnlistType.ALL;
+                        EnlistController.enlistType = value ?? EnlistType.CURRENT;
                       },
                     ),
                   ),

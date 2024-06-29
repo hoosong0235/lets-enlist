@@ -36,7 +36,7 @@ InterviewType? _getNullableInterviewType(String? interviewType) {
 }
 
 class EnlistController {
-  static EnlistType enlistType = EnlistType.ALL;
+  static EnlistType enlistType = EnlistType.CURRENT;
 
   // ignore: prefer_final_fields
   static List<EnlistModel> _rawEnlists = [];
