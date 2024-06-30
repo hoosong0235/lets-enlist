@@ -115,6 +115,7 @@ class _SearchViewState extends State<SearchView> {
                               FindController.initialDischargeDateTimeRange.end,
                           initialDateRange:
                               FindController.dischargeDateTimeRange,
+                          initialEntryMode: DatePickerEntryMode.input,
                         ) ??
                         FindController.dischargeDateTimeRange;
 
@@ -156,6 +157,7 @@ class _SearchViewState extends State<SearchView> {
                       currentDate: DateTime.now(),
                       lastDate: FindController.initialEnlistDateTimeRange.end,
                       initialDateRange: FindController.enlistDateTimeRange,
+                      initialEntryMode: DatePickerEntryMode.input,
                     ) ??
                     FindController.enlistDateTimeRange;
 
@@ -313,7 +315,8 @@ class _SearchViewState extends State<SearchView> {
                         .toList(),
                     onSelected: (EnlistType? value) => setState(
                       () {
-                        EnlistController.enlistType = value ?? EnlistType.CURRENT;
+                        EnlistController.enlistType =
+                            value ?? EnlistType.CURRENT;
                       },
                     ),
                   ),

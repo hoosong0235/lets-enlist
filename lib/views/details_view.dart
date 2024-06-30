@@ -486,7 +486,10 @@ class _DetailsViewState extends State<DetailsView> {
                 ? InkWell(
                     child: Text(
                       widget.enlistModel.administrationAnnouncementLink!,
-                      style: tt.bodyLarge,
+                      style: tt.bodyLarge?.copyWith(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                     onTap: () async => await launchUrlString(
                       widget.enlistModel.administrationAnnouncementLink!,

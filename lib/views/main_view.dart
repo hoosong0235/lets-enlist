@@ -165,6 +165,7 @@ class _MainViewState extends State<MainView> {
                               FindController.initialDischargeDateTimeRange.end,
                           initialDateRange:
                               FindController.dischargeDateTimeRange,
+                          initialEntryMode: DatePickerEntryMode.input,
                         ) ??
                         FindController.dischargeDateTimeRange;
 
@@ -206,6 +207,7 @@ class _MainViewState extends State<MainView> {
                       currentDate: DateTime.now(),
                       lastDate: FindController.initialEnlistDateTimeRange.end,
                       initialDateRange: FindController.enlistDateTimeRange,
+                      initialEntryMode: DatePickerEntryMode.input,
                     ) ??
                     FindController.enlistDateTimeRange;
 
