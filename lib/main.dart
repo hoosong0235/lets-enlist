@@ -10,6 +10,7 @@ void main() async {
   );
 
   EnlistController.fetchRawEnlists();
+  EnlistController.fetchLastestEnlists();
   runApp(const LetsEnlist());
 }
 

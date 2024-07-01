@@ -3,7 +3,6 @@
 import 'package:lets_enlist/utilities/value.dart';
 
 class EnlistModel {
-  // todo: define required fields for the functionality above
   EnlistModel({
     required this.index,
     required this.branch,

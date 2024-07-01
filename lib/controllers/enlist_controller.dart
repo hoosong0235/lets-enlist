@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:lets_enlist/controllers/find_controller.dart';
 import 'package:lets_enlist/models/enlist_model.dart';
 import 'package:lets_enlist/utilities/database.dart';
@@ -36,26 +38,38 @@ InterviewType? _getNullableInterviewType(String? interviewType) {
 }
 
 class EnlistController {
-  static EnlistType enlistType = EnlistType.CURRENT;
+  static FilterType filterType = FilterType.CURRENT;
+  static SortType sortType = SortType.RECOMMEND;
 
+  // raw
   // ignore: prefer_final_fields
   static List<EnlistModel> _rawEnlists = [];
-  static List<EnlistModel> _foundEnlists = [];
-
   static List<EnlistModel> get rawEnlists => _rawEnlists;
-  static List<EnlistModel> get foundEnlists => _foundEnlists
-      .where((EnlistModel enlistModel) => enlistType.function(enlistModel))
-      .toList();
-  static List<EnlistModel> get latestEnlists {
-    return _rawEnlists
-        .where(
-          (EnlistModel enlistmodel) => enlistmodel.dDay == null
-              ? false
-              : (0 <= enlistmodel.dDay! && enlistmodel.dDay! < 30),
-        )
-        .toList()
-      ..sort((a, b) => a.applicationEnd.difference(b.applicationEnd).inMinutes);
-  }
+
+  // latest
+  static int _latestEnlistsIndex = 10;
+  static bool _isLoadingLatestEnlists = false;
+  static bool get isLoadingLatestEnlists => _isLoadingLatestEnlists;
+  static List<EnlistModel> _latestEnlist = [];
+  static List<EnlistModel> get latestEnlistsList => _latestEnlist;
+  static List<EnlistModel> get latestEnlistsSublist => _latestEnlist.sublist(
+        0,
+        min(_latestEnlist.length, _latestEnlistsIndex),
+      );
+
+  // found
+  static int _foundEnlistsIndex = 10;
+  static bool _isLoadingFoundEnlists = false;
+  static bool get isLoadingFoundEnlists => _isLoadingFoundEnlists;
+  static List<EnlistModel> _foundEnlists = [];
+  static List<EnlistModel> _filteredFoundEnlists = [];
+  static List<EnlistModel> _sortedFilteredFoundEnlists = [];
+  static List<EnlistModel> get foundEnlistsList => _sortedFilteredFoundEnlists;
+  static List<EnlistModel> get foundEnlistsSubList =>
+      _sortedFilteredFoundEnlists.sublist(
+        0,
+        min(_sortedFilteredFoundEnlists.length, _foundEnlistsIndex),
+      );
 
   static void fetchRawEnlists() {
     int cnt = 0;
@@ -98,7 +112,30 @@ class EnlistController {
     );
   }
 
-  static void findFoundEnlists() {
+  static void fetchLastestEnlists() {
+    _latestEnlist = _rawEnlists
+        .where(
+          (EnlistModel enlistmodel) => enlistmodel.dDay == null
+              ? false
+              : (0 <= enlistmodel.dDay! && enlistmodel.dDay! < 30),
+        )
+        .toList()
+      ..sort((a, b) => a.applicationEnd.difference(b.applicationEnd).inMinutes);
+  }
+
+  static void loadLatestEnlists() {
+    _isLoadingLatestEnlists = true;
+    _latestEnlistsIndex += 10;
+
+    Timer(
+      const Duration(),
+      () {
+        _isLoadingLatestEnlists = false;
+      },
+    );
+  }
+
+  static void fetchFoundEnlists() {
     _foundEnlists = _rawEnlists
         .where((EnlistModel enlistModel) =>
             (FindController.keyword.isEmpty ||
@@ -119,11 +156,30 @@ class EnlistController {
                         .isAfter(FindController.dischargeDateTimeRange.start) &&
                     enlistModel.dischargeDateTime
                         .isBefore(FindController.dischargeDateTimeRange.end))))
-        .toList()
-      ..sort(SortType.RECOMMEND.function);
+        .toList();
   }
 
-  static void sortFoundEnlists(SortType sortType) {
-    _foundEnlists.sort(sortType.function);
+  static void loadFoundEnlists() {
+    _isLoadingFoundEnlists = true;
+    _foundEnlistsIndex += 10;
+
+    Timer(
+      const Duration(),
+      () {
+        _isLoadingFoundEnlists = false;
+      },
+    );
+  }
+
+  static void filterFoundEnlists() {
+    _filteredFoundEnlists = _foundEnlists
+        .where((EnlistModel enlistModel) => filterType.function(enlistModel))
+        .toList();
+  }
+
+  static void sortFilteredFoundEnlists() {
+    _sortedFilteredFoundEnlists = [
+      ..._filteredFoundEnlists,
+    ]..sort(sortType.function);
   }
 }

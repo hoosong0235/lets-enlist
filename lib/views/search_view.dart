@@ -182,7 +182,9 @@ class _SearchViewState extends State<SearchView> {
       return FilledButton(
         onPressed: () {
           setState(() {
-            EnlistController.findFoundEnlists();
+            EnlistController.fetchFoundEnlists();
+            EnlistController.filterFoundEnlists();
+            EnlistController.sortFilteredFoundEnlists();
           });
         },
         child: const Text('검색'),
@@ -223,7 +225,9 @@ class _SearchViewState extends State<SearchView> {
         },
         onSubmitted: (_) {
           setState(() {
-            EnlistController.findFoundEnlists();
+            EnlistController.fetchFoundEnlists();
+            EnlistController.filterFoundEnlists();
+            EnlistController.sortFilteredFoundEnlists();
           });
         },
       );
@@ -273,9 +277,9 @@ class _SearchViewState extends State<SearchView> {
     Column _buildFoundEnlists() {
       return Column(
         children: List.generate(
-          EnlistController.foundEnlists.length,
+          EnlistController.foundEnlistsSubList.length,
           (int i) => buildEnlist(
-            enlistModel: EnlistController.foundEnlists[i],
+            enlistModel: EnlistController.foundEnlistsSubList[i],
           ),
         ),
       );
@@ -294,7 +298,7 @@ class _SearchViewState extends State<SearchView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '총 ${EnlistController.foundEnlists.length} 건',
+                '총 ${EnlistController.foundEnlistsList.length} 건',
                 style: tt.labelLarge,
               ),
               Row(
@@ -304,19 +308,21 @@ class _SearchViewState extends State<SearchView> {
                       outlineBorder: BorderSide.none,
                       border: InputBorder.none,
                     ),
-                    initialSelection: EnlistController.enlistType,
-                    dropdownMenuEntries: EnlistType.values
+                    initialSelection: EnlistController.filterType,
+                    dropdownMenuEntries: FilterType.values
                         .map(
-                          (EnlistType enlistType) => DropdownMenuEntry(
+                          (FilterType enlistType) => DropdownMenuEntry(
                             value: enlistType,
                             label: enlistType.name,
                           ),
                         )
                         .toList(),
-                    onSelected: (EnlistType? value) => setState(
+                    onSelected: (FilterType? value) => setState(
                       () {
-                        EnlistController.enlistType =
-                            value ?? EnlistType.CURRENT;
+                        EnlistController.filterType =
+                            value ?? FilterType.CURRENT;
+                        EnlistController.filterFoundEnlists();
+                        EnlistController.sortFilteredFoundEnlists();
                       },
                     ),
                   ),
@@ -325,7 +331,7 @@ class _SearchViewState extends State<SearchView> {
                       outlineBorder: BorderSide.none,
                       border: InputBorder.none,
                     ),
-                    initialSelection: SortType.RECOMMEND,
+                    initialSelection: EnlistController.sortType,
                     dropdownMenuEntries: SortType.values
                         .map(
                           (SortType sortType) => DropdownMenuEntry(
@@ -336,9 +342,8 @@ class _SearchViewState extends State<SearchView> {
                         .toList(),
                     onSelected: (SortType? value) => setState(
                       () {
-                        EnlistController.sortFoundEnlists(
-                          value ?? SortType.RECOMMEND,
-                        );
+                        EnlistController.sortType = value ?? SortType.RECOMMEND;
+                        EnlistController.sortFilteredFoundEnlists();
                       },
                     ),
                   ),
@@ -355,22 +360,35 @@ class _SearchViewState extends State<SearchView> {
     return Scaffold(
       appBar: const buildAppBar(),
       floatingActionButton: const buildFloatingActionButton(),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: PADDING,
-              vertical: 48,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (!EnlistController.isLoadingFoundEnlists &&
+              notification.metrics.pixels ==
+                  notification.metrics.maxScrollExtent) {
+            setState(() {
+              EnlistController.loadFoundEnlists();
+            });
+          }
+
+          return true;
+        },
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: PADDING,
+                vertical: 48,
+              ),
+              child: Column(
+                children: [
+                  _buildSearchCard(),
+                  buildSizedBox(48),
+                  _buildList(),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                _buildSearchCard(),
-                buildSizedBox(48),
-                _buildList(),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

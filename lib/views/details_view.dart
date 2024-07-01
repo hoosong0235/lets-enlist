@@ -5,7 +5,6 @@ import 'package:lets_enlist/models/enlist_model.dart';
 import 'package:lets_enlist/utilities/color.dart';
 import 'package:lets_enlist/utilities/value.dart';
 import 'package:lets_enlist/utilities/widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 // ignore: must_be_immutable
@@ -23,90 +22,83 @@ class _DetailsViewState extends State<DetailsView> {
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
 
-    Stack _buildStack() {
-      return Stack(
-        children: [
-          SvgPicture.asset(
-            'assets/${widget.enlistModel.branch.nameEng}GradientLarge.svg',
-            height: 320,
-            fit: BoxFit.cover,
-          ),
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: PADDING),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.enlistModel.descriptionShort,
-                            style: tt.headlineLarge?.copyWith(
-                              color: WHITE,
-                            ),
-                          ),
-                          Text(
-                            widget.enlistModel.classification ?? '-',
-                            style: tt.displayLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: WHITE,
-                            ),
-                          ),
-                        ],
+    Widget _buildStack() {
+      return Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: PADDING,
+          vertical: 96,
+        ),
+        decoration: BoxDecoration(
+          gradient: widget.enlistModel.branch.gradientColor,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.enlistModel.descriptionShort,
+                      style: tt.headlineLarge?.copyWith(
+                        color: WHITE,
                       ),
-                      FirestoreDatabaseController.isFavoriteEnlist(
-                        widget.enlistModel,
+                    ),
+                    Text(
+                      widget.enlistModel.classification ?? '-',
+                      style: tt.displayLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: WHITE,
+                      ),
+                    ),
+                  ],
+                ),
+                FirestoreDatabaseController.isFavoriteEnlist(
+                  widget.enlistModel,
+                )
+                    ? IconButton(
+                        onPressed: () async {
+                          if (AuthenticationController.hasUserCredential) {
+                            await FirestoreDatabaseController
+                                .removeFavoriteEnlists(
+                              widget.enlistModel,
+                            );
+                          } else {
+                            await AuthenticationController.signIn();
+                          }
+
+                          setState(() {});
+                        },
+                        icon: const Icon(
+                          Icons.star,
+                          color: WHITE,
+                        ),
                       )
-                          ? IconButton(
-                              onPressed: () async {
-                                if (AuthenticationController
-                                    .hasUserCredential) {
-                                  await FirestoreDatabaseController
-                                      .removeFavoriteEnlists(
-                                    widget.enlistModel,
-                                  );
-                                } else {
-                                  await AuthenticationController.signIn();
-                                }
+                    : IconButton(
+                        onPressed: () async {
+                          if (AuthenticationController.hasUserCredential) {
+                            await FirestoreDatabaseController
+                                .appendFavoriteEnlists(
+                              widget.enlistModel,
+                            );
+                          } else {
+                            await AuthenticationController.signIn();
+                          }
 
-                                setState(() {});
-                              },
-                              icon: const Icon(
-                                Icons.star,
-                                color: WHITE,
-                              ),
-                            )
-                          : IconButton(
-                              onPressed: () async {
-                                if (AuthenticationController
-                                    .hasUserCredential) {
-                                  await FirestoreDatabaseController
-                                      .appendFavoriteEnlists(
-                                    widget.enlistModel,
-                                  );
-                                } else {
-                                  await AuthenticationController.signIn();
-                                }
-
-                                setState(() {});
-                              },
-                              icon: const Icon(
-                                Icons.star_border,
-                                color: WHITE,
-                              ),
-                            ),
-                    ],
-                  ),
-                ],
-              ),
+                          setState(() {});
+                        },
+                        icon: const Icon(
+                          Icons.star_border,
+                          color: WHITE,
+                        ),
+                      ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
 
@@ -178,7 +170,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   '${widget.enlistModel.recruitmentNumber ?? 0}명',
                                   style: tt.bodyLarge,
                                 ),
@@ -197,7 +188,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   widget.enlistModel.interviewType?.name ??
                                       '없음',
                                   style: tt.bodyLarge,
@@ -220,7 +210,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
                                   style: tt.bodyLarge,
                                 ),
@@ -239,7 +228,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   widget.enlistModel.firstResultsDateTime
                                           ?.toString()
                                           .substring(0, 16) ??
@@ -264,7 +252,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   (widget.enlistModel.interviewStart != null &&
                                           widget.enlistModel.interviewEnd !=
                                               null)
@@ -287,7 +274,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   widget.enlistModel.finalResultsDateTime
                                           ?.toString()
                                           .substring(0, 16) ??
@@ -316,7 +302,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   '${widget.enlistModel.recruitmentNumber ?? 0}명',
                                   style: tt.bodyLarge,
                                 ),
@@ -335,7 +320,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   widget.enlistModel.interviewType?.name ??
                                       '없음',
                                   style: tt.bodyLarge,
@@ -358,7 +342,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
                                   style: tt.bodyLarge,
                                 ),
@@ -377,7 +360,6 @@ class _DetailsViewState extends State<DetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  // todo: modify here
                                   widget.enlistModel.finalResultsDateTime
                                           ?.toString()
                                           .substring(0, 16) ??
@@ -414,7 +396,6 @@ class _DetailsViewState extends State<DetailsView> {
                             ),
                           ),
                           Text(
-                            // todo: modify here
                             widget.enlistModel.enlistDateTime
                                 .toString()
                                 .substring(0, 16),
@@ -435,7 +416,6 @@ class _DetailsViewState extends State<DetailsView> {
                             ),
                           ),
                           Text(
-                            // todo: modify here
                             widget.enlistModel.dischargeDateTime
                                 .toString()
                                 .substring(0, 16),
@@ -459,7 +439,6 @@ class _DetailsViewState extends State<DetailsView> {
                             ),
                           ),
                           Text(
-                            // todo: modify here
                             widget.enlistModel.recruitTrainingCenter ?? '-',
                             style: tt.bodyLarge,
                           ),
@@ -489,6 +468,7 @@ class _DetailsViewState extends State<DetailsView> {
                       style: tt.bodyLarge?.copyWith(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
+                        decorationColor: Colors.blue,
                       ),
                     ),
                     onTap: () async => await launchUrlString(

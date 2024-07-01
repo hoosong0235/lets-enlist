@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lets_enlist/controllers/enlist_controller.dart';
 import 'package:lets_enlist/controllers/find_controller.dart';
@@ -8,7 +7,6 @@ import 'package:lets_enlist/utilities/value.dart';
 import 'package:lets_enlist/utilities/widget.dart';
 import 'package:lets_enlist/views/details_view.dart';
 import 'package:lets_enlist/views/search_view.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -18,43 +16,50 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  int _bannerIndex = 0;
+  // int _bannerIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
 
     // ignore: unused_local_variable
-    Timer _timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      setState(() {
-        _bannerIndex = (_bannerIndex + 1) % 3;
-      });
-    });
+    // Timer _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+    //   setState(() {
+    //     _bannerIndex = (_bannerIndex + 1) % 3;
+    //   });
+    // });
 
-    IndexedStack _buildImage() {
-      return IndexedStack(
-        index: _bannerIndex,
-        children: [
-          Image.asset(
-            width: double.infinity,
-            height: 512,
-            'assets/banner0.png',
-            fit: BoxFit.fitWidth,
-          ),
-          Image.asset(
-            width: double.infinity,
-            height: 512,
-            'assets/banner1.png',
-            fit: BoxFit.fitWidth,
-          ),
-          Image.asset(
-            width: double.infinity,
-            height: 512,
-            'assets/banner2.png',
-            fit: BoxFit.fitWidth,
-          ),
-        ],
+    Widget _buildImage() {
+      return Image.asset(
+        width: double.infinity,
+        height: 512,
+        'assets/banner0.png',
+        fit: BoxFit.fitWidth,
       );
+
+      // return IndexedStack(
+      //   index: _bannerIndex,
+      //   children: [
+      //     Image.asset(
+      //       width: double.infinity,p
+      //       height: 512,
+      //       'assets/banner0.png',
+      //       fit: BoxFit.fitWidth,
+      //     ),
+      //     Image.asset(
+      //       width: double.infinity,
+      //       height: 512,
+      //       'assets/banner1.png',
+      //       fit: BoxFit.fitWidth,
+      //     ),
+      //     Image.asset(
+      //       width: double.infinity,
+      //       height: 512,
+      //       'assets/banner2.png',
+      //       fit: BoxFit.fitWidth,
+      //     ),
+      //   ],
+      // );
     }
 
     Text _buildHeadline() {
@@ -231,7 +236,9 @@ class _MainViewState extends State<MainView> {
     Widget _buildSearchButton() {
       return FilledButton(
         onPressed: () {
-          EnlistController.findFoundEnlists();
+          EnlistController.fetchFoundEnlists();
+          EnlistController.filterFoundEnlists();
+          EnlistController.sortFilteredFoundEnlists();
 
           Navigator.push(
             context,
@@ -283,7 +290,9 @@ class _MainViewState extends State<MainView> {
           FindController.keyword = keyword;
         },
         onSubmitted: (_) {
-          EnlistController.findFoundEnlists();
+          EnlistController.fetchFoundEnlists();
+          EnlistController.filterFoundEnlists();
+          EnlistController.sortFilteredFoundEnlists();
 
           Navigator.push(
             context,
@@ -386,46 +395,39 @@ class _MainViewState extends State<MainView> {
                 setState(() {});
               },
             ),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: SvgPicture.asset(
-                    'assets/${enlistModel.branch.nameEng}GradientSmall.svg',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 48),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 48),
+              decoration: BoxDecoration(
+                gradient: enlistModel.branch.gradientColor,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            enlistModel.descriptionShort,
-                            style: tt.labelLarge?.copyWith(
-                              color: WHITE,
-                            ),
-                          ),
-                          Text(
-                            enlistModel.classification ?? '-',
-                            style: tt.headlineLarge?.copyWith(
-                              color: WHITE,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        enlistModel.descriptionShort,
+                        style: tt.labelLarge?.copyWith(
+                          color: WHITE,
+                        ),
                       ),
-                      Image.asset(
-                        'assets/Logo${enlistModel.branch.nameEng}.png',
-                        height: 64,
+                      Text(
+                        enlistModel.classification ?? '-',
+                        style: tt.headlineLarge?.copyWith(
+                          color: WHITE,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  Image.asset(
+                    'assets/Logo${enlistModel.branch.nameEng}.png',
+                    height: 64,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -448,9 +450,9 @@ class _MainViewState extends State<MainView> {
     Column _buildLatestEnlists() {
       return Column(
         children: List.generate(
-          EnlistController.latestEnlists.length,
+          EnlistController.latestEnlistsSublist.length,
           (int i) => buildEnlist(
-            enlistModel: EnlistController.latestEnlists[i],
+            enlistModel: EnlistController.latestEnlistsSublist[i],
           ),
         ),
       );
@@ -508,11 +510,24 @@ class _MainViewState extends State<MainView> {
     return Scaffold(
       appBar: const buildAppBar(),
       floatingActionButton: const buildFloatingActionButton(),
-      body: ListView(
-        children: [
-          _buildStack(),
-          _buildList(),
-        ],
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (!EnlistController.isLoadingLatestEnlists &&
+              notification.metrics.pixels ==
+                  notification.metrics.maxScrollExtent) {
+            setState(() {
+              EnlistController.loadLatestEnlists();
+            });
+          }
+
+          return true;
+        },
+        child: ListView(
+          children: [
+            _buildStack(),
+            _buildList(),
+          ],
+        ),
       ),
     );
   }

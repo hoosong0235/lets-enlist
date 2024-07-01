@@ -136,7 +136,6 @@ class _buildEnlistState extends State<buildEnlist> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      // todo: modify here
                       widget.enlistModel.descriptionLong,
                       style: tt.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -146,7 +145,6 @@ class _buildEnlistState extends State<buildEnlist> {
                     ),
                     buildSizedBox(8),
                     Text(
-                      // todo: modify here
                       '${widget.enlistModel.recruitmentNumber ?? '0'}명',
                       style: tt.labelLarge?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -210,7 +208,6 @@ class _buildEnlistState extends State<buildEnlist> {
                         ),
                       ),
                       Text(
-                        // todo: modify here
                         '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
                         style: tt.bodyLarge,
                       ),
@@ -229,7 +226,6 @@ class _buildEnlistState extends State<buildEnlist> {
                         ),
                       ),
                       Text(
-                        // todo: modify here
                         widget.enlistModel.firstResultsDateTime
                                 ?.toString()
                                 .substring(0, 16) ??
@@ -275,7 +271,6 @@ class _buildEnlistState extends State<buildEnlist> {
                         ),
                       ),
                       Text(
-                        // todo: modify here
                         widget.enlistModel.finalResultsDateTime
                                 ?.toString()
                                 .substring(0, 16) ??
@@ -300,7 +295,6 @@ class _buildEnlistState extends State<buildEnlist> {
                         ),
                       ),
                       Text(
-                        // todo: modify here
                         widget.enlistModel.enlistDateTime
                             .toString()
                             .substring(0, 16),
@@ -321,7 +315,6 @@ class _buildEnlistState extends State<buildEnlist> {
                         ),
                       ),
                       Text(
-                        // todo: modify here
                         widget.enlistModel.dischargeDateTime
                             .toString()
                             .substring(0, 16),

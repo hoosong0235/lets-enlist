@@ -7,17 +7,18 @@ import 'package:lets_enlist/utilities/color.dart';
 const double PADDING = 256;
 
 enum Branch {
-  ALL("전체", BLACK, "ALL"),
-  ROKA("육군", ROKAColor, "ROKA"),
-  ROKN("해군", ROKNColor, "ROKN"),
-  ROKAF("공군", ROKAFColor, "ROKAF"),
-  ROKMC("해병대", ROKMCColor, "ROKMC");
+  ALL("전체", BLACK, "ALL", LinearGradient(colors: [BLACK])),
+  ROKA("육군", ROKAColor, "ROKA", ROKAGradient),
+  ROKN("해군", ROKNColor, "ROKN", ROKNGradient),
+  ROKAF("공군", ROKAFColor, "ROKAF", ROKAFGradient),
+  ROKMC("해병대", ROKMCColor, "ROKMC", ROKMCGradient);
 
-  const Branch(this.nameKor, this.color, this.nameEng);
+  const Branch(this.nameKor, this.color, this.nameEng, this.gradientColor);
 
   final String nameKor;
   final Color color;
   final String nameEng;
+  final LinearGradient gradientColor;
 }
 
 enum InterviewType {
@@ -66,12 +67,12 @@ bool filterPast(EnlistModel enlistModel) =>
 bool filterCurrent(EnlistModel enlistModel) =>
     enlistModel.applicationEnd.isAfter(DateTime.now());
 
-enum EnlistType {
+enum FilterType {
   ALL(filterAll, "전체"), // filterAll
   PAST(filterPast, "마감"), // filterPast
   CURRENT(filterCurrent, "진행중"); // filterCurrnet
 
-  const EnlistType(this.function, this.name);
+  const FilterType(this.function, this.name);
 
   final bool Function(EnlistModel) function;
   final String name;
