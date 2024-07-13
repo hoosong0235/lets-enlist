@@ -41,7 +41,7 @@
     <a href="https://lets-enlist.web.app"><strong>웹사이트 바로가기 »</strong></a>
     <br />
     <br />
-    <strong>2024 국방 공공데이터 활용 경진대회 출품작</strong>
+    <strong>2024 국방 공공데이터 활용 경진대회<br />서비스 개발 부문 최우수상</strong>
     <br />
     <br />
     <a href="https://www.figma.com/design/P2tx7s6MSax8SiALLR6erd/%EC%9D%B4%EB%95%8C%EC%9E%85%EB%8C%80?node-id=54795-2082&t=4JCeUbMbZfFgIICb-1">디자인</a>
