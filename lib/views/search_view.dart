@@ -4,6 +4,7 @@ import 'package:lets_enlist/controllers/find_controller.dart';
 import 'package:lets_enlist/utilities/color.dart';
 import 'package:lets_enlist/utilities/value.dart';
 import 'package:lets_enlist/utilities/widget.dart';
+import 'package:lets_enlist/views/filter_view.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -17,12 +18,15 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
 
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
+
     Row _buildBranchPicker() {
       return Row(
         children: [
           Text(
             '군종',
-            style: tt.labelLarge?.copyWith(
+            style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -33,7 +37,7 @@ class _SearchViewState extends State<SearchView> {
               border: InputBorder.none,
             ),
             initialSelection: FindController.branch,
-            textStyle: tt.labelLarge?.copyWith(
+            textStyle: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             dropdownMenuEntries: Branch.values
@@ -59,7 +63,7 @@ class _SearchViewState extends State<SearchView> {
         children: [
           Text(
             '면접',
-            style: tt.labelLarge?.copyWith(
+            style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -70,7 +74,7 @@ class _SearchViewState extends State<SearchView> {
               border: InputBorder.none,
             ),
             initialSelection: FindController.interviewType,
-            textStyle: tt.labelLarge?.copyWith(
+            textStyle: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             dropdownMenuEntries: InterviewType.values
@@ -98,7 +102,7 @@ class _SearchViewState extends State<SearchView> {
           children: [
             Text(
               '전역일',
-              style: tt.labelLarge?.copyWith(
+              style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -126,7 +130,7 @@ class _SearchViewState extends State<SearchView> {
                         FindController.initialDischargeDateTimeRange
                     ? '전체'
                     : '${FindController.dischargeDateTimeRange.start.toString().substring(0, 10)} ~ ${FindController.dischargeDateTimeRange.end.toString().substring(0, 10)}',
-                style: tt.labelLarge?.copyWith(
+                style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -143,7 +147,7 @@ class _SearchViewState extends State<SearchView> {
           children: [
             Text(
               '입대일',
-              style: tt.labelLarge?.copyWith(
+              style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -168,7 +172,7 @@ class _SearchViewState extends State<SearchView> {
                         FindController.initialEnlistDateTimeRange
                     ? '전체'
                     : '${FindController.enlistDateTimeRange.start.toString().substring(0, 10)} ~ ${FindController.enlistDateTimeRange.end.toString().substring(0, 10)}',
-                style: tt.labelLarge?.copyWith(
+                style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -291,7 +295,7 @@ class _SearchViewState extends State<SearchView> {
         children: [
           Text(
             '${FindController.keyword.isEmpty ? '' : '"${FindController.keyword}" '}검색 결과',
-            style: tt.titleLarge,
+            style: (isMobile ? tt.titleSmall : tt.titleLarge),
           ),
           buildSizedBox(16),
           Row(
@@ -299,7 +303,7 @@ class _SearchViewState extends State<SearchView> {
             children: [
               Text(
                 '총 ${EnlistController.foundEnlistsList.length} 건',
-                style: tt.labelLarge,
+                style: (isMobile ? tt.labelSmall : tt.labelLarge),
               ),
               Row(
                 children: [
@@ -309,6 +313,10 @@ class _SearchViewState extends State<SearchView> {
                       border: InputBorder.none,
                     ),
                     initialSelection: EnlistController.filterType,
+                    textStyle:
+                        (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                     dropdownMenuEntries: FilterType.values
                         .map(
                           (FilterType enlistType) => DropdownMenuEntry(
@@ -332,6 +340,10 @@ class _SearchViewState extends State<SearchView> {
                       border: InputBorder.none,
                     ),
                     initialSelection: EnlistController.sortType,
+                    textStyle:
+                        (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                     dropdownMenuEntries: SortType.values
                         .map(
                           (SortType sortType) => DropdownMenuEntry(
@@ -357,6 +369,35 @@ class _SearchViewState extends State<SearchView> {
       );
     }
 
+    SearchBar _buildMobileSearchBar() {
+      return SearchBar(
+        controller: FindController.mainViewKeywordController,
+        elevation: const WidgetStatePropertyAll(4),
+        hintText: FindController.keyword.isEmpty
+            ? '찾으시는 모집병이 있나요?'
+            : FindController.keyword,
+        leading: const Icon(Icons.search),
+        onTap: () => Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, a, b) => const FilterView(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        ),
+      );
+    }
+
+    Widget _buildMobileSearchContainer() {
+      return Row(
+        children: [
+          Expanded(
+            child: _buildMobileSearchBar(),
+          ),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: const buildAppBar(),
       floatingActionButton: const buildFloatingActionButton(),
@@ -375,13 +416,14 @@ class _SearchViewState extends State<SearchView> {
         child: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: PADDING,
+              padding: EdgeInsets.symmetric(
+                horizontal:
+                    isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
                 vertical: 48,
               ),
               child: Column(
                 children: [
-                  _buildSearchCard(),
+                  isMobile ? _buildMobileSearchContainer() : _buildSearchCard(),
                   buildSizedBox(48),
                   _buildList(),
                 ],

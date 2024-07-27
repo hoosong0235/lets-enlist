@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:lets_enlist/models/enlist_model.dart';
 import 'package:lets_enlist/utilities/color.dart';
 
-const double PADDING = 256;
+const double WIDTHTRHESHOLD = 1312; // 1280 + 2 * 16
+
+// ignore: non_constant_identifier_names
+double DESKTOPPADDING(double width) => (width - WIDTHTRHESHOLD) / 2 + 16;
+const double MOBILEPADDING = 16;
 
 enum Branch {
   ALL("전체", BLACK, "ALL", LinearGradient(colors: [BLACK])),

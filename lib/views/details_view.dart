@@ -22,11 +22,16 @@ class _DetailsViewState extends State<DetailsView> {
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
 
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
+
     Widget _buildStack() {
       return Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: PADDING,
-          vertical: 96,
+        padding: EdgeInsets.only(
+          left: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
+          top: isMobile ? 16 : 96,
+          right: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
+          bottom: isMobile ? 64 : 96,
         ),
         decoration: BoxDecoration(
           gradient: widget.enlistModel.branch.gradientColor,
@@ -34,68 +39,153 @@ class _DetailsViewState extends State<DetailsView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
+            Flex(
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.enlistModel.descriptionShort,
-                      style: tt.headlineLarge?.copyWith(
-                        color: WHITE,
-                      ),
-                    ),
-                    Text(
-                      widget.enlistModel.classification ?? '-',
-                      style: tt.displayLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: WHITE,
-                      ),
-                    ),
-                  ],
-                ),
-                FirestoreDatabaseController.isFavoriteEnlist(
-                  widget.enlistModel,
-                )
-                    ? IconButton(
-                        onPressed: () async {
-                          if (AuthenticationController.hasUserCredential) {
-                            await FirestoreDatabaseController
-                                .removeFavoriteEnlists(
-                              widget.enlistModel,
-                            );
-                          } else {
-                            await AuthenticationController.signIn();
-                          }
+              crossAxisAlignment: isMobile
+                  ? CrossAxisAlignment.stretch
+                  : CrossAxisAlignment.start,
+              children: isMobile
+                  ? [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          FirestoreDatabaseController.isFavoriteEnlist(
+                            widget.enlistModel,
+                          )
+                              ? IconButton(
+                                  onPressed: () async {
+                                    if (AuthenticationController
+                                        .hasUserCredential) {
+                                      await FirestoreDatabaseController
+                                          .removeFavoriteEnlists(
+                                        widget.enlistModel,
+                                      );
+                                    } else {
+                                      await AuthenticationController.signIn();
+                                    }
 
-                          setState(() {});
-                        },
-                        icon: const Icon(
-                          Icons.star,
-                          color: WHITE,
-                        ),
-                      )
-                    : IconButton(
-                        onPressed: () async {
-                          if (AuthenticationController.hasUserCredential) {
-                            await FirestoreDatabaseController
-                                .appendFavoriteEnlists(
-                              widget.enlistModel,
-                            );
-                          } else {
-                            await AuthenticationController.signIn();
-                          }
+                                    setState(() {});
+                                  },
+                                  icon: const Icon(
+                                    Icons.star,
+                                    color: WHITE,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () async {
+                                    if (AuthenticationController
+                                        .hasUserCredential) {
+                                      await FirestoreDatabaseController
+                                          .appendFavoriteEnlists(
+                                        widget.enlistModel,
+                                      );
+                                    } else {
+                                      await AuthenticationController.signIn();
+                                    }
 
-                          setState(() {});
-                        },
-                        icon: const Icon(
-                          Icons.star_border,
-                          color: WHITE,
-                        ),
+                                    setState(() {});
+                                  },
+                                  icon: const Icon(
+                                    Icons.star_border,
+                                    color: WHITE,
+                                  ),
+                                ),
+                        ],
                       ),
-              ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.enlistModel.descriptionShort,
+                            style:
+                                (isMobile ? tt.headlineSmall : tt.headlineLarge)
+                                    ?.copyWith(
+                              color: WHITE,
+                            ),
+                          ),
+                          Text(
+                            widget.enlistModel.classification ?? '-',
+                            style:
+                                (isMobile ? tt.displaySmall : tt.displayLarge)
+                                    ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: WHITE,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]
+                  : [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.enlistModel.descriptionShort,
+                            style:
+                                (isMobile ? tt.headlineSmall : tt.headlineLarge)
+                                    ?.copyWith(
+                              color: WHITE,
+                            ),
+                          ),
+                          Text(
+                            widget.enlistModel.classification ?? '-',
+                            style:
+                                (isMobile ? tt.displaySmall : tt.displayLarge)
+                                    ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: WHITE,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FirestoreDatabaseController.isFavoriteEnlist(
+                            widget.enlistModel,
+                          )
+                              ? IconButton(
+                                  onPressed: () async {
+                                    if (AuthenticationController
+                                        .hasUserCredential) {
+                                      await FirestoreDatabaseController
+                                          .removeFavoriteEnlists(
+                                        widget.enlistModel,
+                                      );
+                                    } else {
+                                      await AuthenticationController.signIn();
+                                    }
+
+                                    setState(() {});
+                                  },
+                                  icon: const Icon(
+                                    Icons.star,
+                                    color: WHITE,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () async {
+                                    if (AuthenticationController
+                                        .hasUserCredential) {
+                                      await FirestoreDatabaseController
+                                          .appendFavoriteEnlists(
+                                        widget.enlistModel,
+                                      );
+                                    } else {
+                                      await AuthenticationController.signIn();
+                                    }
+
+                                    setState(() {});
+                                  },
+                                  icon: const Icon(
+                                    Icons.star_border,
+                                    color: WHITE,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ],
             ),
           ],
         ),
@@ -104,52 +194,52 @@ class _DetailsViewState extends State<DetailsView> {
 
     Padding _buildDetail() {
       return Padding(
-        padding: const EdgeInsets.symmetric(
+        padding: EdgeInsets.symmetric(
           vertical: 48,
-          horizontal: PADDING,
+          horizontal: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '보직특성',
-              style: tt.titleLarge?.copyWith(
+              style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             buildSizedBox(16),
             Text(
               widget.enlistModel.description ?? '-',
-              style: tt.bodyLarge,
+              style: (isMobile ? tt.bodySmall : tt.bodyLarge),
             ),
-            buildSizedBox(64),
+            buildSizedBox(isMobile ? 32 : 48),
             Text(
               '지원자격',
-              style: tt.titleLarge?.copyWith(
+              style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             buildSizedBox(16),
             Text(
               widget.enlistModel.qualification ?? '-',
-              style: tt.bodyLarge,
+              style: (isMobile ? tt.bodySmall : tt.bodyLarge),
             ),
-            buildSizedBox(64),
+            buildSizedBox(isMobile ? 32 : 48),
             Text(
               '필요서류',
-              style: tt.titleLarge?.copyWith(
+              style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             buildSizedBox(16),
             Text(
               widget.enlistModel.documentsNeeded ?? '-',
-              style: tt.bodyLarge,
+              style: (isMobile ? tt.bodySmall : tt.bodyLarge),
             ),
-            buildSizedBox(64),
+            buildSizedBox(isMobile ? 32 : 48),
             Text(
               '지원정보',
-              style: tt.titleLarge?.copyWith(
+              style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -157,73 +247,92 @@ class _DetailsViewState extends State<DetailsView> {
             widget.enlistModel.hasInterview
                 ? Column(
                     children: [
-                      Row(
+                      Flex(
+                        mainAxisSize: MainAxisSize.min,
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
                         children: [
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '모집',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   '${widget.enlistModel.recruitmentNumber ?? 0}명',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 32),
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '면접종류',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   widget.enlistModel.interviewType?.name ??
                                       '없음',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      Row(
+                      Flex(
+                        mainAxisSize: MainAxisSize.min,
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
                         children: [
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '지원',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 32),
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '서류발표',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -232,22 +341,28 @@ class _DetailsViewState extends State<DetailsView> {
                                           ?.toString()
                                           .substring(0, 16) ??
                                       '-',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      Row(
+                      Flex(
+                        mainAxisSize: MainAxisSize.min,
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
                         children: [
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '면접',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -257,19 +372,23 @@ class _DetailsViewState extends State<DetailsView> {
                                               null)
                                       ? '${widget.enlistModel.interviewStart.toString().substring(0, 16)} ~ ${widget.enlistModel.interviewEnd.toString().substring(0, 16)}'
                                       : '-',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 32),
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '최종발표',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -278,7 +397,8 @@ class _DetailsViewState extends State<DetailsView> {
                                           ?.toString()
                                           .substring(0, 16) ??
                                       '-',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
@@ -289,73 +409,92 @@ class _DetailsViewState extends State<DetailsView> {
                   )
                 : Column(
                     children: [
-                      Row(
+                      Flex(
+                        mainAxisSize: MainAxisSize.min,
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
                         children: [
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '모집',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   '${widget.enlistModel.recruitmentNumber ?? 0}명',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 32),
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '면접종류',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   widget.enlistModel.interviewType?.name ??
                                       '없음',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      Row(
+                      Flex(
+                        mainAxisSize: MainAxisSize.min,
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
                         children: [
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '지원',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 32),
-                          Expanded(
+                          Flexible(
+                            fit: FlexFit.loose,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '최종발표',
-                                  style: tt.bodyLarge?.copyWith(
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                          ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -364,7 +503,8 @@ class _DetailsViewState extends State<DetailsView> {
                                           ?.toString()
                                           .substring(0, 16) ??
                                       '-',
-                                  style: tt.bodyLarge,
+                                  style:
+                                      (isMobile ? tt.bodySmall : tt.bodyLarge),
                                 ),
                               ],
                             ),
@@ -373,25 +513,29 @@ class _DetailsViewState extends State<DetailsView> {
                       ),
                     ],
                   ),
-            buildSizedBox(64),
+            buildSizedBox(isMobile ? 32 : 48),
             Text(
               '입대정보',
-              style: tt.titleLarge?.copyWith(
+              style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             buildSizedBox(16),
             Column(
               children: [
-                Row(
+                Flex(
+                  mainAxisSize: MainAxisSize.min,
+                  direction: isMobile ? Axis.vertical : Axis.horizontal,
                   children: [
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             '입대',
-                            style: tt.bodyLarge?.copyWith(
+                            style: (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                ?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -399,19 +543,21 @@ class _DetailsViewState extends State<DetailsView> {
                             widget.enlistModel.enlistDateTime
                                 .toString()
                                 .substring(0, 16),
-                            style: tt.bodyLarge,
+                            style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(width: 32),
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             '전역',
-                            style: tt.bodyLarge?.copyWith(
+                            style: (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                ?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -419,44 +565,49 @@ class _DetailsViewState extends State<DetailsView> {
                             widget.enlistModel.dischargeDateTime
                                 .toString()
                                 .substring(0, 16),
-                            style: tt.bodyLarge,
+                            style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                Row(
+                Flex(
+                  mainAxisSize: MainAxisSize.min,
+                  direction: isMobile ? Axis.vertical : Axis.horizontal,
                   children: [
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             '훈련소',
-                            style: tt.bodyLarge?.copyWith(
+                            style: (isMobile ? tt.bodySmall : tt.bodyLarge)
+                                ?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             widget.enlistModel.recruitTrainingCenter ?? '-',
-                            style: tt.bodyLarge,
+                            style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(width: 32),
-                    const Expanded(
+                    const Flexible(
+                      fit: FlexFit.loose,
                       child: Row(),
                     ),
                   ],
                 ),
               ],
             ),
-            buildSizedBox(64),
+            buildSizedBox(isMobile ? 32 : 48),
             Text(
               '참고자료',
-              style: tt.titleLarge?.copyWith(
+              style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -465,7 +616,7 @@ class _DetailsViewState extends State<DetailsView> {
                 ? InkWell(
                     child: Text(
                       widget.enlistModel.administrationAnnouncementLink!,
-                      style: tt.bodyLarge?.copyWith(
+                      style: (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
                         decorationColor: Colors.blue,
@@ -477,9 +628,8 @@ class _DetailsViewState extends State<DetailsView> {
                   )
                 : Text(
                     '-',
-                    style: tt.bodyLarge,
+                    style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                   ),
-            buildSizedBox(64),
           ],
         ),
       );

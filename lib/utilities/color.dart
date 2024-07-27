@@ -26,4 +26,4 @@ const LinearGradient ROKNGradient =
 const LinearGradient ROKAFGradient =
     LinearGradient(colors: [ROKAFColor, ROKAF64Color]);
 const LinearGradient ROKMCGradient =
-    LinearGradient(colors: [ROKMCColor, ROKA64Color]);
+    LinearGradient(colors: [ROKMCColor, ROKMC64Color]);

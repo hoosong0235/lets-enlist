@@ -31,8 +31,13 @@ class _buildAppBarState extends State<buildAppBar> {
       setState(() {});
     });
 
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: PADDING),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
+      ),
       child: AppBar(
         backgroundColor: WHITE,
         scrolledUnderElevation: 0,
@@ -105,6 +110,9 @@ class _buildEnlistState extends State<buildEnlist> {
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
 
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth < WIDTHTRHESHOLD;
+
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       setState(() {});
     });
@@ -124,104 +132,154 @@ class _buildEnlistState extends State<buildEnlist> {
       },
       style: TextButton.styleFrom(
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        padding: const EdgeInsets.all(0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      widget.enlistModel.descriptionLong,
-                      style: tt.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: widget.enlistModel.branch.color,
+            isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.enlistModel.descriptionLong,
+                        style: (isMobile ? tt.titleSmall : tt.titleLarge)
+                            ?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: widget.enlistModel.branch.color,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    buildSizedBox(8),
-                    Text(
-                      '${widget.enlistModel.recruitmentNumber ?? '0'}명',
-                      style: tt.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: widget.enlistModel.branch.color,
-                      ),
-                    ),
-                    buildSizedBox(8),
-                    Text(
-                      'D${widget.enlistModel.dDay != null ? (widget.enlistModel.dDay! == 0 ? '-day' : (widget.enlistModel.dDay! > 0 ? '-${widget.enlistModel.dDay!}' : '+${-widget.enlistModel.dDay!}')) : '-0'}',
-                      style: tt.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: widget.enlistModel.branch.color,
-                      ),
-                    ),
-                  ],
-                ),
-                FirestoreDatabaseController.isFavoriteEnlist(widget.enlistModel)
-                    ? IconButton(
-                        onPressed: () async {
-                          if (AuthenticationController.hasUserCredential) {
-                            await FirestoreDatabaseController
-                                .removeFavoriteEnlists(
-                              widget.enlistModel,
-                            );
-                          } else {
-                            await AuthenticationController.signIn();
-                          }
-
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.star),
+                      buildSizedBox(4),
+                      Row(
+                        children: [
+                          Text(
+                            '${widget.enlistModel.recruitmentNumber ?? '0'}명',
+                            style: (isMobile ? tt.labelSmall : tt.labelLarge)
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: widget.enlistModel.branch.color,
+                            ),
+                          ),
+                          buildSizedBox(4),
+                          Text(
+                            'D${widget.enlistModel.dDay != null ? (widget.enlistModel.dDay! == 0 ? '-day' : (widget.enlistModel.dDay! > 0 ? '-${widget.enlistModel.dDay!}' : '+${-widget.enlistModel.dDay!}')) : '-0'}',
+                            style: (isMobile ? tt.labelSmall : tt.labelLarge)
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: widget.enlistModel.branch.color,
+                            ),
+                          ),
+                        ],
                       )
-                    : IconButton(
-                        onPressed: () async {
-                          if (AuthenticationController.hasUserCredential) {
-                            await FirestoreDatabaseController
-                                .appendFavoriteEnlists(
-                              widget.enlistModel,
-                            );
-                          } else {
-                            await AuthenticationController.signIn();
-                          }
-
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.star_border),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            widget.enlistModel.descriptionLong,
+                            style: (isMobile ? tt.titleSmall : tt.titleLarge)
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: widget.enlistModel.branch.color,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          buildSizedBox(8),
+                          Text(
+                            '${widget.enlistModel.recruitmentNumber ?? '0'}명',
+                            style: (isMobile ? tt.labelSmall : tt.labelLarge)
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: widget.enlistModel.branch.color,
+                            ),
+                          ),
+                          buildSizedBox(8),
+                          Text(
+                            'D${widget.enlistModel.dDay != null ? (widget.enlistModel.dDay! == 0 ? '-day' : (widget.enlistModel.dDay! > 0 ? '-${widget.enlistModel.dDay!}' : '+${-widget.enlistModel.dDay!}')) : '-0'}',
+                            style: (isMobile ? tt.labelSmall : tt.labelLarge)
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: widget.enlistModel.branch.color,
+                            ),
+                          ),
+                        ],
                       ),
-              ],
-            ),
+                      FirestoreDatabaseController.isFavoriteEnlist(
+                              widget.enlistModel)
+                          ? IconButton(
+                              onPressed: () async {
+                                if (AuthenticationController
+                                    .hasUserCredential) {
+                                  await FirestoreDatabaseController
+                                      .removeFavoriteEnlists(
+                                    widget.enlistModel,
+                                  );
+                                } else {
+                                  await AuthenticationController.signIn();
+                                }
+
+                                setState(() {});
+                              },
+                              icon: const Icon(Icons.star),
+                            )
+                          : IconButton(
+                              onPressed: () async {
+                                if (AuthenticationController
+                                    .hasUserCredential) {
+                                  await FirestoreDatabaseController
+                                      .appendFavoriteEnlists(
+                                    widget.enlistModel,
+                                  );
+                                } else {
+                                  await AuthenticationController.signIn();
+                                }
+
+                                setState(() {});
+                              },
+                              icon: const Icon(Icons.star_border),
+                            ),
+                    ],
+                  ),
             buildSizedBox(16),
-            Row(
+            Flex(
+              mainAxisSize: MainAxisSize.min,
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
               children: [
-                Expanded(
+                Flexible(
+                  fit: FlexFit.loose,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '지원',
-                        style: tt.bodyLarge?.copyWith(
+                        style:
+                            (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         '${widget.enlistModel.applicationStart.toString().substring(0, 16)} ~ ${widget.enlistModel.applicationEnd.toString().substring(0, 16)}',
-                        style: tt.bodyLarge,
+                        style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 32),
-                Expanded(
+                SizedBox(width: isMobile ? 0 : 32),
+                Flexible(
+                  fit: FlexFit.loose,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '서류발표',
-                        style: tt.bodyLarge?.copyWith(
+                        style:
+                            (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -230,22 +288,26 @@ class _buildEnlistState extends State<buildEnlist> {
                                 ?.toString()
                                 .substring(0, 16) ??
                             '-',
-                        style: tt.bodyLarge,
+                        style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            Row(
+            Flex(
+              mainAxisSize: MainAxisSize.min,
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
               children: [
-                Expanded(
+                Flexible(
+                  fit: FlexFit.loose,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '면접',
-                        style: tt.bodyLarge?.copyWith(
+                        style:
+                            (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -254,19 +316,21 @@ class _buildEnlistState extends State<buildEnlist> {
                                 widget.enlistModel.interviewEnd != null)
                             ? '${widget.enlistModel.interviewStart.toString().substring(0, 16)} ~ ${widget.enlistModel.interviewEnd.toString().substring(0, 16)}'
                             : '-',
-                        style: tt.bodyLarge,
+                        style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 32),
-                Expanded(
+                SizedBox(width: isMobile ? 0 : 32),
+                Flexible(
+                  fit: FlexFit.loose,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '최종발표',
-                        style: tt.bodyLarge?.copyWith(
+                        style:
+                            (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -275,22 +339,26 @@ class _buildEnlistState extends State<buildEnlist> {
                                 ?.toString()
                                 .substring(0, 16) ??
                             '-',
-                        style: tt.bodyLarge,
+                        style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            Row(
+            Flex(
+              mainAxisSize: MainAxisSize.min,
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
               children: [
-                Expanded(
+                Flexible(
+                  fit: FlexFit.loose,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '입대',
-                        style: tt.bodyLarge?.copyWith(
+                        style:
+                            (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -298,19 +366,21 @@ class _buildEnlistState extends State<buildEnlist> {
                         widget.enlistModel.enlistDateTime
                             .toString()
                             .substring(0, 16),
-                        style: tt.bodyLarge,
+                        style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 32),
-                Expanded(
+                SizedBox(width: isMobile ? 0 : 32),
+                Flexible(
+                  fit: FlexFit.loose,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '전역',
-                        style: tt.bodyLarge?.copyWith(
+                        style:
+                            (isMobile ? tt.bodySmall : tt.bodyLarge)?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -318,7 +388,7 @@ class _buildEnlistState extends State<buildEnlist> {
                         widget.enlistModel.dischargeDateTime
                             .toString()
                             .substring(0, 16),
-                        style: tt.bodyLarge,
+                        style: (isMobile ? tt.bodySmall : tt.bodyLarge),
                       ),
                     ],
                   ),
@@ -343,9 +413,12 @@ class buildFloatingActionButton extends StatefulWidget {
 class _buildFloatingActionButtonState extends State<buildFloatingActionButton> {
   @override
   Widget build(BuildContext context) {
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth < WIDTHTRHESHOLD;
+
     return ChatController.isChatFloating
         ? Container(
-            width: 384,
+            width: isMobile ? viewportWidth - 32 : 384,
             height: 512,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(32),
@@ -355,7 +428,7 @@ class _buildFloatingActionButtonState extends State<buildFloatingActionButton> {
             child: Column(
               children: [
                 Container(
-                  width: 384,
+                  width: isMobile ? viewportWidth - 32 : 384,
                   height: 56,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(

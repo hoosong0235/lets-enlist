@@ -24,6 +24,10 @@ class ChatController {
     // generationConfig: GenerationConfig(maxOutputTokens: 100),
   );
 
+  static void initialize(bool isMobile) {
+    isChatFloating = isMobile ? false : true;
+  }
+
   static void sendChat() {
     if (text == '' || isChatReceiving) return;
 
@@ -31,8 +35,7 @@ class ChatController {
 
     _chatSession ??= _model.startChat(
       history: [
-        Content.text(
-            '너는 대한민국 모집병 통합검색 웹사이트 "이때입대"의 챗봇이야. 사용자에게 모집병을 추천해줘.'),
+        Content.text('너는 대한민국 모집병 통합검색 웹사이트 "이때입대"의 챗봇이야. 사용자에게 모집병을 추천해줘.'),
       ],
     );
 

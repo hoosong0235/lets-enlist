@@ -17,6 +17,9 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
 
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
+
     Column _buildFavoriteEnlists() {
       return Column(
         children: List.generate(
@@ -35,8 +38,8 @@ class _ProfileViewState extends State<ProfileView> {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: PADDING,
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
               vertical: 48,
             ),
             child: Column(
@@ -50,7 +53,7 @@ class _ProfileViewState extends State<ProfileView> {
                 buildSizedBox(16),
                 Text(
                   '${AuthenticationController.displayName}님, 환영합니다',
-                  style: tt.headlineLarge,
+                  style: (isMobile ? tt.headlineSmall : tt.headlineLarge),
                 ),
                 buildSizedBox(48),
                 Column(
@@ -60,14 +63,15 @@ class _ProfileViewState extends State<ProfileView> {
                       children: [
                         Text(
                           '⭐',
-                          style: tt.titleLarge?.copyWith(
+                          style: (isMobile ? tt.titleSmall : tt.titleLarge)
+                              ?.copyWith(
                             color: Colors.yellow,
                           ),
                         ),
                         buildSizedBox(4),
                         Text(
                           '관심 모집병',
-                          style: tt.titleLarge,
+                          style: (isMobile ? tt.titleSmall : tt.titleLarge),
                         ),
                       ],
                     ),

@@ -6,6 +6,7 @@ import 'package:lets_enlist/utilities/color.dart';
 import 'package:lets_enlist/utilities/value.dart';
 import 'package:lets_enlist/utilities/widget.dart';
 import 'package:lets_enlist/views/details_view.dart';
+import 'package:lets_enlist/views/filter_view.dart';
 import 'package:lets_enlist/views/search_view.dart';
 
 class MainView extends StatefulWidget {
@@ -29,12 +30,15 @@ class _MainViewState extends State<MainView> {
     //   });
     // });
 
+    double viewportWidth = MediaQuery.of(context).size.width;
+    bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
+
     Widget _buildImage() {
       return Image.asset(
         width: double.infinity,
-        height: 512,
+        height: isMobile ? 384 : 512,
         'assets/banner0.png',
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.cover,
       );
 
       // return IndexedStack(
@@ -65,7 +69,7 @@ class _MainViewState extends State<MainView> {
     Text _buildHeadline() {
       return Text(
         '이때갈까 저때갈까\n입대할때 이때입대',
-        style: tt.headlineLarge?.copyWith(
+        style: (isMobile ? tt.headlineSmall : tt.headlineLarge)?.copyWith(
           fontWeight: FontWeight.bold,
           color: WHITE,
         ),
@@ -77,7 +81,7 @@ class _MainViewState extends State<MainView> {
         children: [
           Text(
             '군종',
-            style: tt.labelLarge?.copyWith(
+            style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -88,7 +92,7 @@ class _MainViewState extends State<MainView> {
               border: InputBorder.none,
             ),
             initialSelection: FindController.branch,
-            textStyle: tt.labelLarge?.copyWith(
+            textStyle: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             dropdownMenuEntries: Branch.values
@@ -114,7 +118,7 @@ class _MainViewState extends State<MainView> {
         children: [
           Text(
             '면접',
-            style: tt.labelLarge?.copyWith(
+            style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -125,7 +129,7 @@ class _MainViewState extends State<MainView> {
               border: InputBorder.none,
             ),
             initialSelection: FindController.interviewType,
-            textStyle: tt.labelLarge?.copyWith(
+            textStyle: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             dropdownMenuEntries: InterviewType.values
@@ -153,7 +157,7 @@ class _MainViewState extends State<MainView> {
           children: [
             Text(
               '전역일',
-              style: tt.labelLarge?.copyWith(
+              style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -181,7 +185,7 @@ class _MainViewState extends State<MainView> {
                         FindController.initialDischargeDateTimeRange
                     ? '전체'
                     : '${FindController.dischargeDateTimeRange.start.toString().substring(0, 10)} ~ ${FindController.dischargeDateTimeRange.end.toString().substring(0, 10)}',
-                style: tt.labelLarge?.copyWith(
+                style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -198,7 +202,7 @@ class _MainViewState extends State<MainView> {
           children: [
             Text(
               '입대일',
-              style: tt.labelLarge?.copyWith(
+              style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -223,7 +227,7 @@ class _MainViewState extends State<MainView> {
                         FindController.initialEnlistDateTimeRange
                     ? '전체'
                     : '${FindController.enlistDateTimeRange.start.toString().substring(0, 10)} ~ ${FindController.enlistDateTimeRange.end.toString().substring(0, 10)}',
-                style: tt.labelLarge?.copyWith(
+                style: (isMobile ? tt.labelSmall : tt.labelLarge)?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -268,6 +272,25 @@ class _MainViewState extends State<MainView> {
       );
     }
 
+    SearchBar _buildMobileSearchBar() {
+      return SearchBar(
+        controller: FindController.mainViewKeywordController,
+        elevation: const WidgetStatePropertyAll(0),
+        hintText: FindController.keyword.isEmpty
+            ? '찾으시는 모집병이 있나요?'
+            : FindController.keyword,
+        leading: const Icon(Icons.search),
+        onTap: () => Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, a, b) => const FilterView(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        ),
+      );
+    }
+
     SearchBar _buildSearchBar() {
       return SearchBar(
         controller: FindController.mainViewKeywordController,
@@ -307,6 +330,16 @@ class _MainViewState extends State<MainView> {
             },
           );
         },
+      );
+    }
+
+    Widget _buildMobileSearchContainer() {
+      return Row(
+        children: [
+          Expanded(
+            child: _buildMobileSearchBar(),
+          ),
+        ],
       );
     }
 
@@ -359,16 +392,19 @@ class _MainViewState extends State<MainView> {
         children: [
           _buildImage(),
           Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               vertical: 32,
-              horizontal: PADDING,
+              horizontal:
+                  isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeadline(),
                 buildSizedBox(32),
-                _buildSearchContainer()
+                isMobile
+                    ? _buildMobileSearchContainer()
+                    : _buildSearchContainer(),
               ],
             ),
           ),
@@ -409,13 +445,15 @@ class _MainViewState extends State<MainView> {
                     children: [
                       Text(
                         enlistModel.descriptionShort,
-                        style: tt.labelLarge?.copyWith(
+                        style: (isMobile ? tt.labelSmall : tt.labelLarge)
+                            ?.copyWith(
                           color: WHITE,
                         ),
                       ),
                       Text(
                         enlistModel.classification ?? '-',
-                        style: tt.headlineLarge?.copyWith(
+                        style: (isMobile ? tt.headlineSmall : tt.headlineLarge)
+                            ?.copyWith(
                           color: WHITE,
                           fontWeight: FontWeight.bold,
                         ),
@@ -442,7 +480,7 @@ class _MainViewState extends State<MainView> {
           _buildPopularEnlist(EnlistController.rawEnlists[22]),
           buildSizedBox(32),
           _buildPopularEnlist(EnlistController.rawEnlists[7]),
-        ],
+        ].sublist(0, isMobile ? 1 : 5),
       );
     }
 
@@ -460,9 +498,9 @@ class _MainViewState extends State<MainView> {
 
     Padding _buildList() {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 48,
-          horizontal: PADDING,
+        padding: EdgeInsets.symmetric(
+          vertical: isMobile ? 16 : 48,
+          horizontal: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,14 +509,14 @@ class _MainViewState extends State<MainView> {
               children: [
                 Text(
                   '🔥',
-                  style: tt.titleLarge?.copyWith(
+                  style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                     color: Colors.red,
                   ),
                 ),
                 buildSizedBox(4),
                 Text(
                   '인기 모집병',
-                  style: tt.titleLarge,
+                  style: (isMobile ? tt.titleSmall : tt.titleLarge),
                 ),
               ],
             ),
@@ -489,14 +527,14 @@ class _MainViewState extends State<MainView> {
               children: [
                 Text(
                   '⏳',
-                  style: tt.titleLarge?.copyWith(
+                  style: (isMobile ? tt.titleSmall : tt.titleLarge)?.copyWith(
                     color: Colors.amber,
                   ),
                 ),
                 buildSizedBox(4),
                 Text(
                   '얼마 남지 않았어요!',
-                  style: tt.titleLarge,
+                  style: (isMobile ? tt.titleSmall : tt.titleLarge),
                 ),
               ],
             ),
