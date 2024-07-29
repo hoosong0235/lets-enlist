@@ -16,9 +16,20 @@ class _FilterViewState extends State<FilterView> {
   @override
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
+    ColorScheme cs = Theme.of(context).colorScheme;
 
     SearchBar _buildSearchBar() {
       return SearchBar(
+        hintStyle: WidgetStatePropertyAll(
+          tt.bodySmall?.copyWith(
+            color: cs.onSurfaceVariant,
+          ),
+        ),
+        textStyle: WidgetStatePropertyAll(
+          tt.bodySmall?.copyWith(
+            color: cs.onSurface,
+          ),
+        ),
         controller: FindController.mainViewKeywordController,
         hintText: FindController.keyword.isEmpty
             ? '찾으시는 모집병이 있나요?'

@@ -22,6 +22,7 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
+    ColorScheme cs = Theme.of(context).colorScheme;
 
     // ignore: unused_local_variable
     // Timer _timer = Timer.periodic(const Duration(minutes: 1), (_) {
@@ -274,6 +275,16 @@ class _MainViewState extends State<MainView> {
 
     SearchBar _buildMobileSearchBar() {
       return SearchBar(
+        hintStyle: WidgetStatePropertyAll(
+          tt.bodySmall?.copyWith(
+            color: cs.onSurfaceVariant,
+          ),
+        ),
+        textStyle: WidgetStatePropertyAll(
+          tt.bodySmall?.copyWith(
+            color: cs.onSurface,
+          ),
+        ),
         controller: FindController.mainViewKeywordController,
         elevation: const WidgetStatePropertyAll(0),
         hintText: FindController.keyword.isEmpty

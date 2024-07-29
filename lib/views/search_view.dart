@@ -17,6 +17,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     TextTheme tt = Theme.of(context).textTheme;
+    ColorScheme cs = Theme.of(context).colorScheme;
 
     double viewportWidth = MediaQuery.of(context).size.width;
     bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
@@ -371,6 +372,16 @@ class _SearchViewState extends State<SearchView> {
 
     SearchBar _buildMobileSearchBar() {
       return SearchBar(
+        hintStyle: WidgetStatePropertyAll(
+          tt.bodySmall?.copyWith(
+            color: cs.onSurfaceVariant,
+          ),
+        ),
+        textStyle: WidgetStatePropertyAll(
+          tt.bodySmall?.copyWith(
+            color: cs.onSurface,
+          ),
+        ),
         controller: FindController.mainViewKeywordController,
         elevation: const WidgetStatePropertyAll(4),
         hintText: FindController.keyword.isEmpty
