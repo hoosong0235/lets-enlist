@@ -45,3 +45,7 @@ app.*.map.json
 
 # API key
 lib/utilities/gitignore.dart
+
+# build
+android_sdk/
+java/
