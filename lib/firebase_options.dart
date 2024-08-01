@@ -21,15 +21,9 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -60,4 +54,23 @@ class DefaultFirebaseOptions {
     authDomain: 'lets-enlist.firebaseapp.com',
     storageBucket: 'lets-enlist.appspot.com',
   );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDqkrY6mURLrE2uwx54eUTfEkbPWRuQOws',
+    appId: '1:837916050508:ios:762ec097dbac275c9820e9',
+    messagingSenderId: '837916050508',
+    projectId: 'lets-enlist',
+    storageBucket: 'lets-enlist.appspot.com',
+    iosClientId: '837916050508-j875hk5962so6kkot3s47l7a16890s4d.apps.googleusercontent.com',
+    iosBundleId: 'com.lets-enlist.app',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBqMv6bfqVuf-6AxF4-M90lHj8V6BvUrbI',
+    appId: '1:837916050508:android:d9cb1a633fa5d9179820e9',
+    messagingSenderId: '837916050508',
+    projectId: 'lets-enlist',
+    storageBucket: 'lets-enlist.appspot.com',
+  );
+
 }

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "837916050508",
+    "project_id": "lets-enlist",
+    "storage_bucket": "lets-enlist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837916050508:android:d9cb1a633fa5d9179820e9",
+        "android_client_info": {
+          "package_name": "com.lets_enlist.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837916050508-bdinj2dii05sh58md953vgjvn807cfjs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqMv6bfqVuf-6AxF4-M90lHj8V6BvUrbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "837916050508-bdinj2dii05sh58md953vgjvn807cfjs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "837916050508-j875hk5962so6kkot3s47l7a16890s4d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lets-enlist.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
