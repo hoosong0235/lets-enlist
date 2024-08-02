@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "837916050508-6jdufgaau5puenejcni029aus5c76bs1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lets_enlist.app",
+            "certificate_hash": "efe5d1416c40b6cb3cf2b269e30c22594b0ead37"
+          }
+        },
+        {
           "client_id": "837916050508-bdinj2dii05sh58md953vgjvn807cfjs.apps.googleusercontent.com",
           "client_type": 3
         }
