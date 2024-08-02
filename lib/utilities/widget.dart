@@ -10,6 +10,7 @@ import 'package:lets_enlist/controllers/firestore_database_controller.dart';
 import 'package:lets_enlist/models/enlist_model.dart';
 import 'package:lets_enlist/utilities/color.dart';
 import 'package:lets_enlist/utilities/value.dart';
+import 'package:lets_enlist/views/ai_view.dart';
 import 'package:lets_enlist/views/details_view.dart';
 import 'package:lets_enlist/views/profile_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,14 +36,14 @@ class _buildAppBarState extends State<buildAppBar> {
     bool isMobile = viewportWidth <= WIDTHTRHESHOLD;
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
+      padding: EdgeInsets.only(
+        left: isMobile ? 0 : DESKTOPPADDING(viewportWidth),
+        right: isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
       ),
       child: AppBar(
         backgroundColor: WHITE,
         scrolledUnderElevation: 0,
-        leadingWidth: 128,
-        leading: MouseRegion(
+        title: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
@@ -54,6 +55,7 @@ class _buildAppBarState extends State<buildAppBar> {
             },
             child: SvgPicture.asset(
               'assets/LetsEnlistHorizontal.svg',
+              width: 128,
             ),
           ),
         ),
@@ -565,9 +567,18 @@ class _buildFloatingActionButtonState extends State<buildFloatingActionButton> {
             ),
             child: FloatingActionButton.large(
               onPressed: () {
-                setState(() {
-                  ChatController.isChatFloating = true;
-                });
+                isMobile
+                    ? Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, a, b) => const AiView(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      )
+                    : setState(() {
+                        ChatController.isChatFloating = true;
+                      });
               },
               backgroundColor: Colors.transparent,
               elevation: 0,

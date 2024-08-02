@@ -85,7 +85,7 @@ class _FilterViewState extends State<FilterView> {
         children: [
           Text(
             '군종',
-            style: (tt.labelLarge)?.copyWith(
+            style: (tt.labelSmall)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -95,7 +95,7 @@ class _FilterViewState extends State<FilterView> {
               border: InputBorder.none,
             ),
             initialSelection: FindController.branch,
-            textStyle: (tt.labelLarge)?.copyWith(
+            textStyle: (tt.labelSmall)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             dropdownMenuEntries: Branch.values
@@ -122,7 +122,7 @@ class _FilterViewState extends State<FilterView> {
         children: [
           Text(
             '면접',
-            style: (tt.labelLarge)?.copyWith(
+            style: (tt.labelSmall)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -132,7 +132,7 @@ class _FilterViewState extends State<FilterView> {
               border: InputBorder.none,
             ),
             initialSelection: FindController.interviewType,
-            textStyle: (tt.labelLarge)?.copyWith(
+            textStyle: (tt.labelSmall)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             dropdownMenuEntries: InterviewType.values
@@ -159,7 +159,7 @@ class _FilterViewState extends State<FilterView> {
         children: [
           Text(
             '전역일',
-            style: (tt.labelLarge)?.copyWith(
+            style: (tt.labelSmall)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -184,7 +184,7 @@ class _FilterViewState extends State<FilterView> {
                       FindController.initialDischargeDateTimeRange
                   ? '전체'
                   : '${FindController.dischargeDateTimeRange.start.toString().substring(0, 10)} ~ ${FindController.dischargeDateTimeRange.end.toString().substring(0, 10)}',
-              style: (tt.labelLarge)?.copyWith(
+              style: (tt.labelSmall)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -199,7 +199,7 @@ class _FilterViewState extends State<FilterView> {
         children: [
           Text(
             '입대일',
-            style: (tt.labelLarge)?.copyWith(
+            style: (tt.labelSmall)?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -223,7 +223,7 @@ class _FilterViewState extends State<FilterView> {
                       FindController.initialEnlistDateTimeRange
                   ? '전체'
                   : '${FindController.enlistDateTimeRange.start.toString().substring(0, 10)} ~ ${FindController.enlistDateTimeRange.end.toString().substring(0, 10)}',
-              style: (tt.labelLarge)?.copyWith(
+              style: (tt.labelSmall)?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -271,7 +271,10 @@ class _FilterViewState extends State<FilterView> {
       appBar: const buildAppBar(),
       // floatingActionButton: const buildFloatingActionButton(),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(
+          horizontal: MOBILEPADDING,
+          vertical: 16,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -285,7 +288,7 @@ class _FilterViewState extends State<FilterView> {
                     children: [
                       _buildBranchPicker(),
                       _buildInterViewTypePicker(),
-                      buildSizedBox(16),
+                      buildSizedBox(8),
                       _buildEnlistDateTimePicker(),
                       buildSizedBox(16),
                       _buildDischargeDateTimePicker(),

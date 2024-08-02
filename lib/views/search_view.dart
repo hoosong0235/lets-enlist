@@ -430,12 +430,12 @@ class _SearchViewState extends State<SearchView> {
               padding: EdgeInsets.symmetric(
                 horizontal:
                     isMobile ? MOBILEPADDING : DESKTOPPADDING(viewportWidth),
-                vertical: 48,
+                vertical: isMobile ? 16 : 48,
               ),
               child: Column(
                 children: [
                   isMobile ? _buildMobileSearchContainer() : _buildSearchCard(),
-                  buildSizedBox(48),
+                  buildSizedBox(isMobile ? 32 : 48),
                   _buildList(),
                 ],
               ),

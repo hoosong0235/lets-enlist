@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lets_enlist/controllers/firestore_database_controller.dart';
 
 class AuthenticationController {
@@ -12,6 +14,31 @@ class AuthenticationController {
   static String get uid => userCredential!.user!.uid;
 
   static Future<bool> signIn() async {
+    return kIsWeb ? await signInWeb() : await signInApp();
+  }
+
+  static Future<bool> signInApp() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirestoreDatabaseController.loadFavoriteEnlists();
+      hasUserCredential = true;
+    } catch (_) {
+      hasUserCredential = false;
+    }
+
+    return hasUserCredential;
+  }
+
+  static Future<bool> signInWeb() async {
     try {
       userCredential =
           await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
