@@ -68,7 +68,7 @@
 </p>
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/mockup.png" /><br /><br />
+  <br /><img src="readmeAssets/mockup.png" /><br /><br />
 </div>
 
 <p>
@@ -112,7 +112,7 @@
 ### 2. 모집병 공고 통합검색
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/mainViewDesktop.png" /><br /><br />
+  <br /><img src="readmeAssets/mainViewDesktop.png" /><br /><br />
 </div>
 
 <p>
@@ -120,7 +120,7 @@
 </p>
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/searchViewDesktop.png" /><br /><br />
+  <br /><img src="readmeAssets/searchViewDesktop.png" /><br /><br />
 </div>
 
 <p>
@@ -131,7 +131,7 @@
 ### 3. 세부 요강 열람
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/detailViewDesktop.png" /><br /><br />
+  <br /><img src="readmeAssets/detailViewDesktop.png" /><br /><br />
 </div>
 
 <p>
@@ -142,7 +142,7 @@
 ### 4. 관심 모집병
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/profileViewDesktop.png" /><br /><br />
+  <br /><img src="readmeAssets/profileViewDesktop.png" /><br /><br />
 </div>
 
 <p>
@@ -159,13 +159,13 @@
 ### 1. 디자인 및 프로토타이핑
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/designAndPrototyping.png" /><br /><br />
+  <br /><img src="readmeAssets/designAndPrototyping.png" /><br /><br />
 </div>
 
 ### 2. 시스템 아키텍처 설계
 
 <div align="center">
-  <br /><img style="width: 67%;" src="readmeAssets/systemArchitecture.png" /><br /><br />
+  <br /><img src="readmeAssets/systemArchitecture.png" /><br /><br />
 </div>
 
 <p align="right">(<a href="#readme-top">처음으로</a>)</p>
