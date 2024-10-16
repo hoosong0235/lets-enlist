@@ -49,3 +49,5 @@ lib/utilities/gitignore.dart
 # build
 android_sdk/
 java/
+web/
+public/
